@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  db:
+    image: postgres:13
+    volumes:
+      - postgres_data:/var/lib/postgresql/data/
+    environment:
+      POSTGRES_DB: adyl
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1406
+    ports:
+      - "5432:5432"
+
+  web:
+    build: .
+    command: python manage.py runserver 0.0.0.0:8000
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      - DEBUG=1
+      - SECRET_KEY=your_secret_key
+      - DATABASE_URL=postgres://postgres:1406@db:5432/adyl
+
+volumes:
+  postgres_data:
